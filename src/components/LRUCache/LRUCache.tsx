@@ -1,10 +1,6 @@
 import { useState } from "react";
-import useLRUCache from "../hooks/useLRUCache";
-
-interface Loadeddata {
-  id: number;
-  text: string;
-}
+import useLRUCache from "../../hooks/useLRUCache/useLRUCache";
+import { Loadeddata } from "./props.interface";
 
 const LRUCache = () => {
   const [content, setContent] = useState<Loadeddata[]>([]);
@@ -42,10 +38,13 @@ const LRUCache = () => {
       <button onClick={() => handleBtnClick(5)}>Tab 5</button>
 
       <div>
-        <h2>Loaded Content</h2>
         <ul>
           {content.map((item: Loadeddata, i: number) => {
-            return <li key={i}>{item.text}</li>;
+            return (
+              <li style={{ listStyle: "none" }} key={i}>
+                {item.text}
+              </li>
+            );
           })}
         </ul>
       </div>

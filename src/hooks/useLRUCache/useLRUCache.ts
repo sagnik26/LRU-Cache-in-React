@@ -1,19 +1,5 @@
 import { useRef } from "react";
-
-interface valueType {
-    id: number;
-    text: string;
-}
-
-interface cacheType {
-    [key: string]: {key: string | number, value: valueType, next: any}
-}
-
-interface nodeType {
-    key: string | number;
-    value: valueType;
-    next: any;
-}
+import { valueType, cacheType, nodeType } from "./props.interface";
 
 class LRUCache {
     capacity: number;

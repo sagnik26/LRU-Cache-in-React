@@ -1,5 +1,5 @@
 import "./App.css";
-import LRUCache from "./components/LRUCache";
+import LRUCache from "./components/LRUCache/LRUCache";
 
 function App() {
   return (
