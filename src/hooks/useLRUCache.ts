@@ -1,10 +1,17 @@
+import { useRef } from "react";
+
+interface valueType {
+    id: number;
+    text: string;
+}
+
 interface cacheType {
-    [key: string]: {key: string, value: string | number | boolean, next: any}
+    [key: string]: {key: string | number, value: valueType, next: any}
 }
 
 interface nodeType {
-    key: string;
-    value: string | number | boolean;
+    key: string | number;
+    value: valueType;
     next: any;
 }
 
@@ -21,7 +28,7 @@ class LRUCache {
         this.tail = null;
     }
 
-    get(key: string) {
+    get(key: string | number) {
         if(this.cache[key]) {
             this.moveToFront(key);
             return this.cache[key].value;
@@ -30,7 +37,7 @@ class LRUCache {
         return null;
     }
 
-    put(key: string, value: string | number | boolean) {
+    put(key: string | number, value: valueType) {
         if(this.cache[key]) {
             this.cache[key].value = value;
             this.moveToFront(key);
@@ -44,7 +51,7 @@ class LRUCache {
         }
     }
 
-    addToFront(key: string, value: string | number | boolean) {
+    addToFront(key: string | number, value: valueType) {
         const newNode: nodeType = { key, value, next: null };
         if(!this.head) {
             this.head = newNode;
@@ -57,7 +64,7 @@ class LRUCache {
         this.cache[key] = newNode;
     }
 
-    moveToFront(key: string) {
+    moveToFront(key: string | number) {
         const current = this.cache[key];
         if(current === this.head) return;
 
@@ -104,3 +111,14 @@ class LRUCache {
         }
     }
 }
+
+const useLRUCache = (capacity: number) => {
+    const cacheRef = useRef(new LRUCache(capacity))
+
+    return {
+        get: (key: string | number) => cacheRef.current.get(key),
+        put: (key: string | number, value: valueType) => cacheRef.current.put(key, value)
+    }
+}
+
+export default useLRUCache;

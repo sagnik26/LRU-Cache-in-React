@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useLRUCache from "../hooks/useLRUCache";
 
 interface Loadeddata {
   id: number;
@@ -7,6 +8,7 @@ interface Loadeddata {
 
 const LRUCache = () => {
   const [content, setContent] = useState<Loadeddata[]>([]);
+  const { get, put } = useLRUCache(3);
 
   const loadContent = async (id: number) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -15,12 +17,19 @@ const LRUCache = () => {
       id,
       text: `Tab ${id} Data`,
     };
-
+    put(id, loadedData);
     setContent((prev: any) => [...prev, loadedData]);
   };
 
   const handleBtnClick = (id: number) => {
-    loadContent(id);
+    const cachedContent = get(id);
+    if (cachedContent) {
+      console.log(`Content ${id} loaded from cache`);
+      // setContent((prev: any[]) => [...prev, cachedContent]);
+    } else {
+      console.log(`Loading Content ${id}`);
+      loadContent(id);
+    }
   };
 
   return (
@@ -35,8 +44,8 @@ const LRUCache = () => {
       <div>
         <h2>Loaded Content</h2>
         <ul>
-          {content.map((item: Loadeddata) => {
-            return <li key={item.id}>{item.text}</li>;
+          {content.map((item: Loadeddata, i: number) => {
+            return <li key={i}>{item.text}</li>;
           })}
         </ul>
       </div>
